@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  parkingapi:
+    container_name: parkingapi
+    image: parkingapidockerimage:latest
+    build: .
+    hostname: parkingapi
+    environment:
+      - DOCUMENT_ROOT=/var/www/html/public
+    ports:
+      - "8280:80"
+    volumes:
+      - ../../src:/var/www/html
+
+  parkingapidb:
+    container_name: parkingapidb
+    image: mariadb:latest
+    hostname: parkingapidb
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=parkingapi
+      - MYSQL_USER=dbuser
+      - MYSQL_PASSWORD=ZhW1f3znrj43nk2x
+    volumes:
+      - ../../db:/var/lib/mysql
+    ports:
+      - "8281:3306"
