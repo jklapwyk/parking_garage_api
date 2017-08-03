@@ -13,6 +13,8 @@ class PriceTier extends Model
      */
     protected $fillable = [
         'name',
-        'iso_code'
+        'price',
+        'currency_type_id',
+        'max_duration_seconds',
     ];
 }

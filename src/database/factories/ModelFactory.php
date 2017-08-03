@@ -38,3 +38,10 @@ $factory->define(User::class, function (Faker\Generator $faker) {
 $factory->define(ParkingTicket::class, function (Faker\Generator $faker) {
     return [];
 });
+
+$factory->define(ParkingVenue::class, function (Faker\Generator $faker) {
+    return [
+      'name' => $faker->name,
+      'total_lots' => $faker->numberBetween(1, 20),
+    ];
+});

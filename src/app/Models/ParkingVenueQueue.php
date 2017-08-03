@@ -12,7 +12,7 @@ class ParkingVenueQueue extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'iso_code'
+        'user_id',
+        'parking_venue_id'
     ];
 }

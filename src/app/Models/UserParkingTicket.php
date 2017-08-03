@@ -12,7 +12,10 @@ class UserParkingTicket extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'iso_code'
+        'user_id',
+        'parking_ticket_id',
+        'parking_venue_id',
+        'total_payment',
+        'is_paid'
     ];
 }
