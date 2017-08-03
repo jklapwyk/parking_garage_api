@@ -33,7 +33,8 @@ RUN apt-get install -y \
 	php7.0-mysql \
 	php7.0-odbc \
 	php7.0-opcache \
-  php7.0-zip
+  php7.0-zip \
+  php7.0-mbstring
 
 # Install Apache
 RUN apt-get install apache2 libapache2-mod-php7.0 -y

@@ -14,8 +14,8 @@ class CreateParkingTicketsTable extends Migration
     public function up()
     {
         Schema::create('parking_tickets', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('ticket_hash');
+            //$table->bigIncrements('id');
+            $table->uuid('id')->primary();
             $table->softDeletes();
             $table->timestamps();
         });

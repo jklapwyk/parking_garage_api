@@ -1,5 +1,14 @@
 <?php
 
+use App\Models\User;
+use App\Models\CurrencyType;
+use App\Models\ParkingTicket;
+use App\Models\ParkingVenue;
+use App\Models\ParkingVenuePriceTier;
+use App\Models\ParkingVenueQueue;
+use App\Models\PriceTier;
+use App\Models\UserParkingTicket;
+use Webpatser\Uuid\Uuid;
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -12,13 +21,20 @@
 */
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(User::class, function (Faker\Generator $faker) {
     static $password;
 
     return [
-        'name' => $faker->name,
+        'first_name' => $faker->name,
+        'last_name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
+        'user_hash' => Uuid::generate()->string,
+        'is_registered' => 1,
     ];
+});
+
+$factory->define(ParkingTicket::class, function (Faker\Generator $faker) {
+    return [];
 });

@@ -15,8 +15,8 @@ class CreateUserParkingTicketsTable extends Migration
     {
         Schema::create('user_parking_tickets', function (Blueprint $table) {
             $table->bigInteger('user_id')->unsigned();
-            $table->bigInteger('ticket_id')->unsigned();
-            $table->primary(['user_id', 'ticket_id']);
+            $table->string('parking_ticket_id', 36);
+            $table->primary(['user_id', 'parking_ticket_id']);
             $table->integer('parking_venue_id')->unsigned();
             $table->boolean('is_paid')->default(0);
             $table->softDeletes();

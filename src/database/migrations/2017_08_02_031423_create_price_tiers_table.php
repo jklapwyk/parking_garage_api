@@ -18,11 +18,14 @@ class CreatePriceTiersTable extends Migration
             $table->string('name');
             $table->decimal('price', 7, 2);
             $table->integer('currency_type_id')->unsigned();
-            $table->integer('parking_venue_id')->unsigned();
             $table->integer('max_duration_seconds');
             $table->softDeletes();
             $table->timestamps();
         });
+
+        
+
+
     }
 
     /**
