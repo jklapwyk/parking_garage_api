@@ -29,7 +29,7 @@ class UserParkingTicket extends Model
         return $this->belongsTo('App\Models\ParkingTicket');
     }
 
-    public function parkingVenue())
+    public function parkingVenue()
     {
         return $this->belongsTo('App\Models\ParkingVenue');
     }

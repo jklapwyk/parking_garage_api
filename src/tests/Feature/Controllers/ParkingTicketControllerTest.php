@@ -13,11 +13,17 @@ use Carbon\Carbon;
 
 class ParkingTicketControllerTest extends TestCase
 {
+    //use DatabaseMigrations;
+
     public function testCreateTicket()
     {
-        $response = $this->json('POST', '/api/createParkingTicket', ['data'=>['parkingVenueId'=>'1']] );
+
+        \Artisan::call('migrate:refresh');
+
+        $response = $this->json('POST', '/api/createParkingTicket', ['data'=>['parking_venue_id'=>'1']] );
 
         $this->assertParkingTicketSuccessResponse( $response );
+
 
     }
 
@@ -27,53 +33,50 @@ class ParkingTicketControllerTest extends TestCase
 
         $this->assertSuccessJSONResponse( $response );
 
-        $response->assertJson([
-                 'type' => 'parking_ticket',
-                 'id' => '*'
+        $response->assertJsonFragment([
+                 'type' => 'parking_ticket'
              ]);
+
     }
 
     public function testCreateTicketWithUser()
     {
         $user = factory(User::class)->make();
 
-        $response = $this->json('POST', '/api/createParkingTicket', ['data'=>['parkingVenueId'=>'1', 'userId'=>$user->id]] );
+        $response = $this->json('POST', '/api/createParkingTicket', ['data'=>['parking_venue_id'=>'1', 'user_id'=>$user->id]] );
 
         $this->assertParkingTicketSuccessResponse( $response );
+
+        $response->assertJsonFragment([
+                 'type' => 'parking_ticket'
+             ]);
     }
 
     public function testCreateTicketWithUserParkingVenueFull()
     {
 
+
         $user = factory(User::class)->make();
 
-        $response = $this->json('POST', '/api/createParkingTicket', ['data'=>['parkingVenueId'=>'1', 'userId'=>$user->id]] );
+        $response = $this->json('POST', '/api/createParkingTicket', ['data'=>['parking_venue_id'=>'1', 'user_id'=>$user->id]] );
 
         $response->assertStatus(403);
 
-        $this->assertErrorJSONResponse( $response );
+        $this->assertErrorJSONResponse( $response, 403, 1 );
 
-        $response->assertJson([
-                 'status' => '403',
-                 'code' => '1',
-                 'title' => 'Parking Venue Full'
-             ]);
+
+
     }
 
     public function testCreateTicketWithUserDoesNotExists()
     {
 
-        $response = $this->json('POST', '/api/createParkingTicket', ['data'=>['parkingVenueId'=>'1', 'userId'=>'229']] );
+        $response = $this->json('POST', '/api/createParkingTicket', ['data'=>['parking_venue_id'=>'1', 'user_id'=>'999999999']] );
 
         $response->assertStatus(404);
 
-        $this->assertErrorJSONResponse( $response );
+        $this->assertErrorJSONResponse( $response, 404, 5 );
 
-        $response->assertJson([
-                 'status' => '404',
-                 'code' => '5',
-                 'title' => 'User Not Found'
-             ]);
     }
 
 
@@ -104,7 +107,7 @@ class ParkingTicketControllerTest extends TestCase
 
         \Log::info("PARKING TICKET ID = ".$parkingTicket->id);
 
-        $response = $this->json('GET', '/api/requestPriceForTicket/'.$parkingTicket->id );
+        $response = $this->json('GET', '/api/requestPriceForTicket/5555' );
 
         $this->assertSuccessJSONResponse( $response );
 
@@ -122,13 +125,7 @@ class ParkingTicketControllerTest extends TestCase
 
         $response->assertStatus(404);
 
-        $this->assertErrorJSONResponse( $response );
-
-        $response->assertJson([
-                 'status' => '404',
-                 'code' => '3',
-                 'title' => 'Ticket Not Found'
-             ]);
+        $this->assertErrorJSONResponse( $response, 404, 3 );
 
     }
 
@@ -161,12 +158,9 @@ class ParkingTicketControllerTest extends TestCase
 
         $response->assertStatus(402);
 
-        $this->assertErrorJSONResponse( $response );
+        $this->assertErrorJSONResponse( $response , 402, 2 );
 
-        $response->assertJson([
-                 'status' => '402',
-                 'code' => '2',
-                 'title' => 'Ticket Has Not Been Paid In Full',
+        $response->assertFragmentJson([
                  'price' => 35.50,
                  'total_payment' => 5.50,
                  'currency_type' => 'CAD'
@@ -182,13 +176,8 @@ class ParkingTicketControllerTest extends TestCase
 
         $response->assertStatus(404);
 
-        $this->assertErrorJSONResponse( $response );
+        $this->assertErrorJSONResponse( $response, 404, 3 );
 
-        $response->assertJson([
-                 'status' => '404',
-                 'code' => '3',
-                 'title' => 'Ticket Not Found'
-             ]);
 
     }
 
@@ -223,16 +212,13 @@ class ParkingTicketControllerTest extends TestCase
 
         $response->assertStatus(402);
 
-        $this->assertErrorJSONResponse( $response );
+        $this->assertErrorJSONResponse( $response, 402, 2 );
 
-        $response->assertJson([
-                 'status' => '402',
-                 'code' => '2',
-                 'title' => 'Ticket Has Not Been Paid In Full',
-                 'price' => 35.50,
-                 'total_payment' => 0.00,
-                 'currency_type' => 'CAD'
-             ]);
+        $response->assertFragmentJson([
+                'price' => 35.50,
+                'total_payment' => 0.00,
+                'currency_type' => 'CAD'
+            ]);
 
     }
 
@@ -244,13 +230,7 @@ class ParkingTicketControllerTest extends TestCase
 
         $response->assertStatus(404);
 
-        $this->assertErrorJSONResponse( $response );
-
-        $response->assertJson([
-                 'status' => '404',
-                 'code' => '3',
-                 'title' => 'Ticket Not Found'
-             ]);
+        $this->assertErrorJSONResponse( $response, 404, 3 );
 
     }
 

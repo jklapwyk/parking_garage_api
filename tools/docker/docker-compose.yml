@@ -23,6 +23,20 @@ services:
       - MYSQL_USER=dbuser
       - MYSQL_PASSWORD=ZhW1f3znrj43nk2x
     volumes:
-      - ../../db:/var/lib/mysql
+      - ../../db/default:/var/lib/mysql
     ports:
       - "8281:3306"
+
+  parkingapitestdb:
+    container_name: parkingapitestdb
+    image: mariadb:latest
+    hostname: parkingapitestdb
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=parkingapitest
+      - MYSQL_USER=dbuser
+      - MYSQL_PASSWORD=ZhW1f3znrj43nk2x
+    volumes:
+      - ../../db/test:/var/lib/mysql
+    ports:
+      - "8282:3306"

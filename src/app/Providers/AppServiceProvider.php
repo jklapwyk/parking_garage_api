@@ -23,10 +23,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
-
+        //Services
         $this->app->bind('App\Services\ParkingTicketServiceInterface', 'App\Services\ParkingTicketService');
+
+        //Respositories
         $this->app->bind('App\Repositories\UserRepositoryInterface', 'App\Repositories\UserRepository');
+        $this->app->bind('App\Repositories\ParkingTicketRepositoryInterface', 'App\Repositories\ParkingTicketRepository');
+        $this->app->bind('App\Repositories\UserParkingTicketRepositoryInterface', 'App\Repositories\UserParkingTicketRepository');
 
     }
 }

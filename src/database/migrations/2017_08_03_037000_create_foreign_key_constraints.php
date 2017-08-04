@@ -46,6 +46,7 @@ class CreateForeignKeyConstraints extends Migration
      */
     public function down()
     {
+      
         Schema::table('user_parking_tickets', function (Blueprint $table) {
           $table->dropForeign(['user_id']);
           $table->dropForeign(['parking_ticket_id']);
@@ -65,5 +66,6 @@ class CreateForeignKeyConstraints extends Migration
         Schema::table('price_tiers', function (Blueprint $table) {
           $table->dropForeign(['currency_type_id']);
         });
+
     }
 }

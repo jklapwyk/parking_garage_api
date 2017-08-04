@@ -8,7 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
-class UserController extends BaseController
+class UserController extends ApiController
 {
 
     public function createUser(Request $request )
@@ -18,7 +18,7 @@ class UserController extends BaseController
             'name' => 'test'
             ]);
     }
-    
+
 
     public function addUserToParkingVendorQueue(Request $request )
     {

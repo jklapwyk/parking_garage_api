@@ -8,7 +8,6 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-
     public function assertSuccessJSONResponse( $response )
     {
         $response->assertJsonStructure([
@@ -17,18 +16,27 @@ abstract class TestCase extends BaseTestCase
                    'type'
                  ]
              ]);
+
     }
 
-    public function assertErrorJSONResponse( $response )
+    public function assertErrorJSONResponse( $response, $statusCode, $errorCode )
     {
         $response->assertJsonStructure([
                  'errors' => [
-                   'status',
-                   'code',
-                   'title',
-                   'detail'
+                   '*' => [
+                     'status',
+                     'code',
+                     'title',
+                     'detail'
+                   ]
+
                  ]
              ]);
+
+        $response->assertJsonFragment([
+            'status' => $statusCode,
+            'code' => $errorCode
+        ]);
     }
 
 

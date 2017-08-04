@@ -8,8 +8,10 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App\Services\ParkingTicketServiceInterface;
+use App\Models\User;
+use App\Models\ParkingVenue;
 
-class ParkingTicketController extends BaseController
+class ParkingTicketController extends ApiController
 {
     protected $parkingTicketService;
 
@@ -25,20 +27,39 @@ class ParkingTicketController extends BaseController
         $jsonData = $request->json()->all();
 
         $data = $jsonData['data'];
-        $parkingVenueId = $data['parkingVenueId'];
+        $parkingVenueId = $data['parking_venue_id'];
 
         $userId = null;
 
-        if( isset($data['userId'])){
-          $userId = $data['userId'];
+        if( isset($data['user_id'])){
+          $userId = $data['user_id'];
+          $user = User::find($userId);
+
+          if( !isset($user) ){
+              return $this->sendErrorResponse( 404, 5 );
+          }
         }
 
-        $this->parkingTicketService->createParkingTicket( $parkingVenueId, $userId );
+        $parkingVenue = ParkingVenue::find($parkingVenueId);
+
+        $currentParkingTickets = $parkingVenue->userParkingTickets;
+
+        if( $currentParkingTickets->count() >= $parkingVenue->total_lots ){
+            return $this->sendErrorResponse( 403, 1 );
+        }
+
+        \Log::info("PARKING TICKETs COUNT =>  ".$currentParkingTickets->count());
+
+        $parkingTicketId = $this->parkingTicketService->createParkingTicket( $parkingVenueId, $userId );
+
+        \Log::info("PARKING TICKET id =>  ".$parkingTicketId);
+
+        return $this->sendSuccessResponse( 201, [
+            'type' => 'parking_ticket',
+            'id' => $parkingTicketId
+          ] );
 
 
-        return response()->json([
-            'name' => 'test'
-            ]);
     }
 
     public function requestPriceForTicket( Request $request, $parkingTicketId )
