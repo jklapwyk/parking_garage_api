@@ -10,15 +10,24 @@ use Response;
 use App\Models\User;
 use App\Models\ParkingTicket;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
+use App\Services\ParkingTicketServiceInterface;
 
 class ParkingTicketControllerTest extends TestCase
 {
-    //use DatabaseMigrations;
+    use DatabaseMigrations;
+
+    /*
+    protected $parkingTicketService;
+
+    public function __construct( ParkingTicketServiceInterface $parkingTicketService )
+    {
+        $this->parkingTicketService = $parkingTicketService;
+    }
+    */
 
     public function testCreateTicket()
     {
-
-        \Artisan::call('migrate:refresh');
 
         $response = $this->json('POST', '/api/createParkingTicket', ['data'=>['parking_venue_id'=>'1']] );
 
@@ -54,6 +63,12 @@ class ParkingTicketControllerTest extends TestCase
 
     public function testCreateTicketWithUserParkingVenueFull()
     {
+
+        $parkingTicketService = resolve('App\Services\ParkingTicketServiceInterface');
+
+        for( $i = 0; $i < 5; $i++ ){
+          $parkingTicketService->createParkingTicket( 1 );
+        }
 
 
         $user = factory(User::class)->make();
@@ -101,13 +116,17 @@ class ParkingTicketControllerTest extends TestCase
     {
         //TODO Need to fill in this area
 
-        $user = factory(User::class)->make();
+        $parkingTicketService = resolve('App\Services\ParkingTicketServiceInterface');
 
-        $parkingTicket = factory(ParkingTicket::class)->make();
+        $parkingTicketId = $parkingTicketService->createParkingTicket( 1, $ticketCreationTime, $ticketCreationTime );
 
-        \Log::info("PARKING TICKET ID = ".$parkingTicket->id);
 
-        $response = $this->json('GET', '/api/requestPriceForTicket/5555' );
+
+        $url = '/api/requestPriceForTicket/'.(string)$parkingTicketId;
+
+        \Log::info("PARKING TICKET url = ".$url."  parking ticket id ".$parkingTicketId);
+
+        $response = $this->json('GET', $url );
 
         $this->assertSuccessJSONResponse( $response );
 

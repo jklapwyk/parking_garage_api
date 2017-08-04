@@ -8,12 +8,13 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ParkingTicketControllerTest extends TestCase
 {
-  
+
     /**
      * A basic test example.
      *
      * @return void
      */
+     
     public function testRequestTicketTest()
     {
         $this->assertTrue(true);

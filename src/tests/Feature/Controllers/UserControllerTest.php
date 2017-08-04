@@ -13,6 +13,8 @@ use App\Models\ParkingTicket;
 class UserControllerTest extends TestCase
 {
 
+    use DatabaseMigrations;
+
     public function testCreateUser()
     {
 

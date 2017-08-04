@@ -35,6 +35,6 @@ class ParkingVenue extends Model
 
     public function priceTiers()
     {
-        return $this->belongsToMany('App\Models\PriceTiers', 'parking_venue_price_tiers', 'parking_venue_id', 'price_tier_id');
+        return $this->belongsToMany('App\Models\PriceTier', 'parking_venue_price_tiers', 'parking_venue_id', 'price_tier_id');
     }
 }

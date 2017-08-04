@@ -6,6 +6,7 @@ use App\Repositories\UserRepositoryInterface;
 use App\Repositories\ParkingTicketRepositoryInterface;
 use App\Repositories\UserParkingTicketRepositoryInterface;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ParkingTicketService implements ParkingTicketServiceInterface
 {
@@ -22,20 +23,20 @@ class ParkingTicketService implements ParkingTicketServiceInterface
 
     }
 
-    public function createParkingTicket( $parkingVenueId, $userId = null ){
+    public function createParkingTicket( $parkingVenueId, $userId = null, $creationDate = null ){
 
 
         try {
 
           DB::beginTransaction();
 
-          \Log::info("CREATE PARKING TICKET>>>>");
+
           if( !isset( $userId ) ){
               $user = $this->userRepository->createUser();
               $userId = $user->id;
           }
 
-          $parkingTicket = $this->parkingTicketRepository->createParkingTicket();
+          $parkingTicket = $this->parkingTicketRepository->createParkingTicket( $creationDate );
 
           $userParkingTicket = $this->userParkingTicketRepository->createUserParkingTicket( $userId, $parkingTicket->id, $parkingVenueId );
 

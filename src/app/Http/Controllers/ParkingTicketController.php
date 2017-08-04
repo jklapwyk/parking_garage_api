@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 use App\Services\ParkingTicketServiceInterface;
 use App\Models\User;
 use App\Models\ParkingVenue;
+use App\Models\ParkingTicket;
+use App\Models\PriceTier;
+use Carbon\Carbon;
 
 class ParkingTicketController extends ApiController
 {
@@ -64,10 +67,78 @@ class ParkingTicketController extends ApiController
 
     public function requestPriceForTicket( Request $request, $parkingTicketId )
     {
+        \Log::info("requestPriceForTicket = ".$parkingTicketId);
 
-        return response()->json([
-            'name' => 'test'
-            ]);
+        $parkingTicket = ParkingTicket::find( $parkingTicketId );
+
+        if( !isset($parkingTicket) ){
+            return $this->sendErrorResponse( 404, 3 );
+        }
+
+        $parkingTicketCreationDate = $parkingTicket->created_at;
+
+        $nowDate = Carbon::now();
+
+        $diffInSeconds = $nowDate->diffInSeconds($parkingTicket->created_at);
+
+        \Log::info("creation date = ".$parkingTicket->created_at."  now = ".$nowDate." diff inseconds = ".$diffInSeconds);
+
+        $userParkingTicket = $parkingTicket->userParkingTicket;
+
+        $parkingVenue = $userParkingTicket->parkingVenue;
+
+        $priceTiers = $parkingVenue->priceTiers;
+
+        \Log::info(" parking venue id = ".$userParkingTicket->parking_venue_id);
+
+        $sortedPriceTiers = $priceTiers->sortByDesc('max_duration_seconds');
+
+        foreach( $sortedPriceTiers as $priceTier ){
+            \Log::info( "price  = ".$priceTier->price." max duration in seconds ".$priceTier->max_duration_seconds);
+        }
+
+
+
+        $finalPrice = $this->calculatePrice( $sortedPriceTiers, $diffInSeconds );
+
+        \Log::info( "Final price = ".$finalPrice);
+
+
+        $currencyType = $sortedPriceTiers->get(0)->currencyType->iso_code;
+
+        return $this->sendSuccessResponse( 200, [
+            'type' => 'parking_ticket',
+            'attributes' => [
+              'price' => $finalPrice,
+              'currency_type' => $currencyType
+            ]
+          ] );
+    }
+
+    public function calculatePrice( $priceTiers, $seconds ){
+
+      $accumulatedPrice = 0;
+
+      for( $i=0; $i < $priceTiers->count(); $i++ ){
+
+          $priceTier = $priceTiers->get($i);
+
+          if( $seconds > $priceTier->max_duration_seconds ){
+
+              $accumulatedPrice += $priceTier->price;
+
+              if( $i == 0 ){
+                  $accumulatedPrice += calculatePrice( $priceTiers, $seconds - $priceTier->max_duration_seconds, $accumulatedPrice );
+              }
+
+              break;
+          }
+
+          \Log::info( ">>> price  = ".$priceTier->price." max duration in seconds ".$priceTier->max_duration_seconds);
+      }
+
+      return $accumulatedPrice;
+
     }
 
     public function payTicket( Request $request, $parkingTicketId )

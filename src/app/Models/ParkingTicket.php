@@ -29,6 +29,6 @@ class ParkingTicket extends Model
 
     public function userParkingTicket()
     {
-        return $this->hasOne('App\Models\ParkingTicket');
+        return $this->hasOne('App\Models\UserParkingTicket');
     }
 }

@@ -25,6 +25,6 @@ class PriceTier extends Model
 
     public function currencyType()
     {
-        return $this->belongsTo('App\Models\CurrencyTypeId');
+        return $this->belongsTo('App\Models\CurrencyType');
     }
 }
