@@ -81,15 +81,15 @@ class ParkingTicketControllerTest extends TestCase
     public function testRequestPriceForTicket()
     {
 
-        $this->assertRequestPriceForTicketAtTime( Carbon.now(), 0.00 );
-        $this->assertRequestPriceForTicketAtTime( Carbon.now()->subHour(1), 3.00 );
-        $this->assertRequestPriceForTicketAtTime( Carbon.now()->subHour(3), 4.50 );
-        $this->assertRequestPriceForTicketAtTime( Carbon.now()->subHour(6), 6.75 );
-        $this->assertRequestPriceForTicketAtTime( Carbon.now()->subHour(24), 10.13 );
-        $this->assertRequestPriceForTicketAtTime( Carbon.now()->subHour(25), 13.13 );
-        $this->assertRequestPriceForTicketAtTime( Carbon.now()->subHour(27), 14.63 );
-        $this->assertRequestPriceForTicketAtTime( Carbon.now()->subHour(30), 16.88 );
-        $this->assertRequestPriceForTicketAtTime( Carbon.now()->subHour(48), 20.26 );
+        $this->assertRequestPriceForTicketAtTime( Carbon::now(), 0.00 );
+        $this->assertRequestPriceForTicketAtTime( Carbon::now()->subHour(1), 3.00 );
+        $this->assertRequestPriceForTicketAtTime( Carbon::now()->subHour(3), 4.50 );
+        $this->assertRequestPriceForTicketAtTime( Carbon::now()->subHour(6), 6.75 );
+        $this->assertRequestPriceForTicketAtTime( Carbon::now()->subHour(24), 10.13 );
+        $this->assertRequestPriceForTicketAtTime( Carbon::now()->subHour(25), 13.13 );
+        $this->assertRequestPriceForTicketAtTime( Carbon::now()->subHour(27), 14.63 );
+        $this->assertRequestPriceForTicketAtTime( Carbon::now()->subHour(30), 16.88 );
+        $this->assertRequestPriceForTicketAtTime( Carbon::now()->subHour(48), 20.26 );
 
 
     }
@@ -101,6 +101,8 @@ class ParkingTicketControllerTest extends TestCase
         $user = factory(User::class)->make();
 
         $parkingTicket = factory(ParkingTicket::class)->make();
+
+        \Log::info("PARKING TICKET ID = ".$parkingTicket->id);
 
         $response = $this->json('GET', '/api/requestPriceForTicket/'.$parkingTicket->id );
 

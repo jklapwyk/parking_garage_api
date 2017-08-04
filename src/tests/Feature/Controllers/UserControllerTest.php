@@ -9,7 +9,6 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Response;
 use App\Models\User;
 use App\Models\ParkingTicket;
-use Carbon\Carbon;
 
 class UserControllerTest extends TestCase
 {

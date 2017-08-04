@@ -14,7 +14,7 @@ class ParkingTicketController extends BaseController
     public function createParkingTicket(Request $request )
     {
 
-        \Log::info("parkingVenueId = ".$parkingVenueId."    userId = ".$userId);
+        //\Log::info("parkingVenueId = ".$parkingVenueId."    userId = ".$userId);
 
         return response()->json([
             'name' => 'test'
