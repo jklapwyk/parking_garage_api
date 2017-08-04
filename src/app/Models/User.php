@@ -32,4 +32,21 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function userParkingTickets()
+    {
+        return $this->hasMany('App\Models\UserParkingTicket');
+    }
+
+    public function parkingTickets()
+    {
+      return $this->hasManyThrough(
+          'App\Models\UserParkingTicket', 'App\Models\ParkingTicket', 'user_id', 'parking_ticket_id', 'id'
+      );
+    }
+
+    public function parkingVenueQueue()
+    {
+        return $this->hasMany('App\Models\ParkingVenueQueue');
+    }
 }

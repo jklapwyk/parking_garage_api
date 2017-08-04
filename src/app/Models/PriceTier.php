@@ -17,4 +17,14 @@ class PriceTier extends Model
         'currency_type_id',
         'max_duration_seconds',
     ];
+
+    public function parkingVenues()
+    {
+        return $this->belongsToMany('App\Models\ParkingVenues', 'parking_venue_price_tiers', 'price_tier_id', 'parking_venue_id');
+    }
+
+    public function currencyType()
+    {
+        return $this->belongsTo('App\Models\CurrencyTypeId');
+    }
 }

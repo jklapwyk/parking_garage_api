@@ -19,4 +19,16 @@ class ParkingTicket extends Model
     ];
 
     public $incrementing = false;
+
+    public function users()
+    {
+        return $this->hasManyThrough(
+            'App\Models\UserParkingTicket', 'App\Models\User', 'parking_ticket_id', 'user_id', 'id'
+        );
+    }
+
+    public function userParkingTicket()
+    {
+        return $this->hasOne('App\Models\ParkingTicket');
+    }
 }

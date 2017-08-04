@@ -15,4 +15,14 @@ class ParkingVenueQueue extends Model
         'user_id',
         'parking_venue_id'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
+
+    public function parkingVenue()
+    {
+        return $this->belongsTo('App\Models\ParkingVenue');
+    }
 }

@@ -24,5 +24,9 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
+
+        $this->app->bind('App\Services\ParkingTicketServiceInterface', 'App\Services\ParkingTicketService');
+        $this->app->bind('App\Repositories\UserRepositoryInterface', 'App\Repositories\UserRepository');
+
     }
 }

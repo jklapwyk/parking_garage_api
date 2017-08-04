@@ -14,17 +14,14 @@ class UserController extends BaseController
     public function createUser(Request $request )
     {
 
-        \Log::info("parkingVenueId = ".$parkingVenueId."    userId = ".$userId);
-
         return response()->json([
             'name' => 'test'
             ]);
     }
+    
 
     public function addUserToParkingVendorQueue(Request $request )
     {
-
-        \Log::info("parkingVenueId = ".$parkingVenueId."    userId = ".$userId);
 
         return response()->json([
             'name' => 'test'

@@ -15,4 +15,9 @@ class CurrencyType extends Model
         'name',
         'iso_code'
     ];
+
+    public function priceTiers()
+    {
+        return $this->hasMany('App\Models\PriceTiers');
+    }
 }

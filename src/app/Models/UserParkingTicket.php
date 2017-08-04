@@ -18,4 +18,19 @@ class UserParkingTicket extends Model
         'total_payment',
         'is_paid'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
+
+    public function parkingTicket()
+    {
+        return $this->belongsTo('App\Models\ParkingTicket');
+    }
+
+    public function parkingVenue())
+    {
+        return $this->belongsTo('App\Models\ParkingVenue');
+    }
 }
