@@ -16,3 +16,15 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('createParkingTicket', 'ParkingTicketController@createParkingTicket');
+
+Route::get('requestPriceForTicket/{parkingTicketId}', 'ParkingTicketController@requestPriceForTicket');
+
+Route::patch('payTicket/{parkingTicketId}', 'ParkingTicketController@payTicket');
+
+Route::patch('acceptTicket/{parkingTicketId}', 'ParkingTicketController@acceptTicket');
+
+Route::post('createUser', 'UserController@createUser');
+
+Route::post('addUserToParkingVendorQueue', 'UserController@addUserToParkingVendorQueue');

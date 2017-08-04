@@ -1,23 +1,21 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit\Controllers;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ExampleTest extends TestCase
+class ParkingTicketControllerTest extends TestCase
 {
+  
     /**
      * A basic test example.
      *
      * @return void
      */
-    public function testBasicTest()
+    public function testRequestTicketTest()
     {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
+        $this->assertTrue(true);
     }
 }
