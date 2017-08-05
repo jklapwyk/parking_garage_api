@@ -14,5 +14,7 @@ return [
   'error_code_5_detail' => 'User does not exists in our records.',
   'error_code_6_title' => 'User Already Added To Queue',
   'error_code_6_detail' => 'The user has already been added to the queue.',
+  'error_code_7_title' => 'Ticket Already Paid',
+  'error_code_7_detail' => 'Ticket has already been paid.',
 
 ];

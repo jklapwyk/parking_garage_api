@@ -19,6 +19,10 @@ class UserParkingTicket extends Model
         'is_paid'
     ];
 
+    public $incrementing = false;
+
+    public $primaryKey  = 'parking_ticket_id';
+
     public function user()
     {
         return $this->belongsTo('App\Models\User');

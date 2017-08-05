@@ -75,79 +75,80 @@ class ParkingTicketController extends ApiController
             return $this->sendErrorResponse( 404, 3 );
         }
 
-        $parkingTicketCreationDate = $parkingTicket->created_at;
-
-        $nowDate = Carbon::now();
-
-        $diffInSeconds = $nowDate->diffInSeconds($parkingTicket->created_at);
-
-        \Log::info("creation date = ".$parkingTicket->created_at."  now = ".$nowDate." diff inseconds = ".$diffInSeconds);
-
-        $userParkingTicket = $parkingTicket->userParkingTicket;
-
-        $parkingVenue = $userParkingTicket->parkingVenue;
-
-        $priceTiers = $parkingVenue->priceTiers;
-
-        \Log::info(" parking venue id = ".$userParkingTicket->parking_venue_id);
-
-        $sortedPriceTiers = $priceTiers->sortByDesc('max_duration_seconds');
-
-        $finalPrice = $this->calculatePrice( $sortedPriceTiers, $diffInSeconds );
-
-        \Log::info( "Final price = ".$finalPrice);
+        $finalPrice = $this->parkingTicketService->getPriceFromParkingTicket( $parkingTicket );
 
 
-        $currencyType = $sortedPriceTiers->get(0)->currencyType->iso_code;
 
         return $this->sendSuccessResponse( 200, [
             'id' => $parkingTicket->id,
             'type' => 'parking_ticket',
             'attributes' => [
-              'price' => $finalPrice,
-              'currency_type' => $currencyType
+              'price' => $finalPrice->price,
+              'currency_type' => $finalPrice->currencyType
             ]
           ] );
     }
 
-    public function calculatePrice( $priceTiers, $seconds ){
 
-      $accumulatedPrice = 0;
-
-      for( $i=$priceTiers->count() - 1; $i >= 0; $i-- ){
-
-          $priceTier = $priceTiers->get($i);
-
-          \Log::info( ">>> price  = ".$priceTier->price." max duration in seconds ".$priceTier->max_duration_seconds);
-
-
-          if( $seconds >= $priceTier->max_duration_seconds ){
-
-              \Log::info( "IN");
-
-              $accumulatedPrice += $priceTier->price;
-
-              if( $i == $priceTiers->count() - 1 ){
-                  \Log::info("RECURSIVE");
-                  $accumulatedPrice += $this->calculatePrice( $priceTiers, $seconds - $priceTier->max_duration_seconds );
-              }
-
-              break;
-          }
-
-
-      }
-
-      return $accumulatedPrice;
-
-    }
 
     public function payTicket( Request $request, $parkingTicketId )
     {
 
-        return response()->json([
-            'name' => 'test'
-            ]);
+        $parkingTicket = ParkingTicket::find( $parkingTicketId );
+
+        if( !isset($parkingTicket) ){
+            return $this->sendErrorResponse( 404, 3 );
+        }
+
+        $userParkingTicket = $parkingTicket->userParkingTicket;
+        if( $userParkingTicket->is_paid ){
+           return $this->sendErrorResponse( 400, 7 );
+        }
+
+        $jsonData = $request->json()->all();
+        $data = $jsonData['data'];
+        $paymentAmount = $data['payment_amount'];
+
+
+
+        $parkingTicketPrice = $this->parkingTicketService->getPriceFromParkingTicket( $parkingTicket );
+
+        \Log::info(" >> paymentAmount = ".$paymentAmount."  userParkingTicket ".$userParkingTicket);
+
+        if( ( $userParkingTicket->total_payment + $paymentAmount ) >= $parkingTicketPrice->price ){
+
+
+
+            $userParkingTicket->is_paid = 1;
+            $userParkingTicket->total_payment = $parkingTicketPrice->price;
+            $userParkingTicket->save();
+
+            return $this->sendSuccessResponse( 200, [
+                'id' => $parkingTicket->id,
+                'type' => 'parking_ticket',
+                'attributes' => [
+                  'total_payment' => $parkingTicketPrice->price,
+                  'is_paid' => $userParkingTicket->is_paid
+                ]
+              ] );
+
+        } else {
+
+          $userParkingTicket->total_payment = $userParkingTicket->total_payment + $paymentAmount;
+
+          $meta = (object)array();
+          $meta->price = $parkingTicketPrice->price;
+          $meta->total_payment = $userParkingTicket->total_payment;
+          $meta->currency_type = $parkingTicketPrice->currencyType;
+
+          $userParkingTicket->save();
+
+          return $this->sendErrorResponse( 402, 2, $meta );
+
+
+        }
+
+
     }
 
     public function acceptTicket( Request $request, $parkingTicketId )

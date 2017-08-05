@@ -151,18 +151,20 @@ class ParkingTicketControllerTest extends TestCase
 
     public function testPayTicket()
     {
+        $parkingTicketService = resolve('App\Services\ParkingTicketServiceInterface');
 
-        $parkingTicketId = "5555";
+        $parkingTicketId = $parkingTicketService->createParkingTicket( 1, null, Carbon::now()->subHour(6) );
 
-        $response = $this->json('PATCH', '/api/payTicket/'.$parkingTicketId, ['data'=>['id'=>$parkingTicketId, 'type'=>'parking_ticket', 'payment_amount'=>35.50, 'currency_type' => 'CAD']] );
+        $response = $this->json('PATCH', '/api/payTicket/'.$parkingTicketId, ['data'=>['payment_amount'=>6.75, 'currency_type' => 'CAD']] );
 
         $response->assertStatus(200);
 
         $this->assertSuccessJSONResponse( $response );
 
-        $response->assertJson([
+        $response->assertJsonFragment([
                  'type' => 'parking_ticket',
-                 'is_paid' => true
+                 'total_payment' => 6.75,
+                 'is_paid' => 1
              ]);
 
     }
@@ -171,17 +173,19 @@ class ParkingTicketControllerTest extends TestCase
     public function testPayTicketFurtherPaymentRequired()
     {
 
-        $parkingTicketId = "5555";
+        $parkingTicketService = resolve('App\Services\ParkingTicketServiceInterface');
 
-        $response = $this->json('PATCH', '/api/payTicket/'.$parkingTicketId, ['data'=>['id'=>$parkingTicketId, 'type'=>'parking_ticket', 'payment_amount'=>5.50, 'currency_type' => 'CAD']] );
+        $parkingTicketId = $parkingTicketService->createParkingTicket( 1, null, Carbon::now()->subHour(6) );
+
+        $response = $this->json('PATCH', '/api/payTicket/'.$parkingTicketId, ['data'=>['payment_amount'=>3.75, 'currency_type' => 'CAD']] );
 
         $response->assertStatus(402);
 
         $this->assertErrorJSONResponse( $response , 402, 2 );
 
-        $response->assertFragmentJson([
-                 'price' => 35.50,
-                 'total_payment' => 5.50,
+        $response->assertJsonFragment([
+                 'price' => 6.75,
+                 'total_payment' => 3.75,
                  'currency_type' => 'CAD'
              ]);
 
