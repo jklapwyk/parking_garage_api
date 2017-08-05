@@ -36,7 +36,7 @@ class UserControllerTest extends TestCase
 
         $this->assertSuccessJSONResponse( $response );
 
-        $response->assertJson([
+        $response->assertJsonFragment([
                  'type' => 'user',
                  'first_name' => 'jamie',
                  'last_name' => 'klapwyk',
@@ -47,8 +47,6 @@ class UserControllerTest extends TestCase
 
     public function testCreateUserWithDuplicateEmail()
     {
-
-        $user = factory(User::class)->make();
 
         $data = [
                   'data'=>[
@@ -62,17 +60,14 @@ class UserControllerTest extends TestCase
                   ]
                 ];
 
+        $this->json('POST', '/api/createUser', $data );
+
         $response = $this->json('POST', '/api/createUser', $data );
 
         $response->assertStatus(400);
 
-        $this->assertErrorJSONResponse( $response );
+        $this->assertErrorJSONResponse( $response, 400, 4 );
 
-        $response->assertJson([
-                 'status' => '400',
-                 'code' => '4',
-                 'title' => 'Email Already Exists'
-             ]);
     }
 
 
