@@ -16,5 +16,7 @@ return [
   'error_code_6_detail' => 'The user has already been added to the queue.',
   'error_code_7_title' => 'Ticket Already Paid',
   'error_code_7_detail' => 'Ticket has already been paid.',
+  'error_code_8_title' => 'Wrong Parking Venue',
+  'error_code_8_detail' => 'The parking venue does not match the parking ticket.',
 
 ];

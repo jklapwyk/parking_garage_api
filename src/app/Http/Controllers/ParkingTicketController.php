@@ -153,10 +153,57 @@ class ParkingTicketController extends ApiController
 
     public function acceptTicket( Request $request, $parkingTicketId )
     {
+        $parkingTicket = ParkingTicket::find( $parkingTicketId );
 
-        return response()->json([
-            'name' => 'test'
-            ]);
+        if( !isset($parkingTicket) ){
+            return $this->sendErrorResponse( 404, 3 );
+        }
+
+        $jsonData = $request->json()->all();
+        $data = $jsonData['data'];
+        $parkingVenueId = $data['parking_venue_id'];
+
+
+        $parkingTicketPrice = $this->parkingTicketService->getPriceFromParkingTicket( $parkingTicket );
+
+        $userParkingTicket = $parkingTicket->userParkingTicket;
+
+        if( $userParkingTicket->parking_venue_id != $parkingVenueId ){
+            return $this->sendErrorResponse( 400, 8 );
+        }
+
+        if( $parkingTicketPrice->price == 0 || $userParkingTicket->is_paid ){
+
+          $parkingTicket->delete();
+          $userParkingTicket->delete();
+          //$parkingTicket->save();
+
+          //$this->parkingTicketService->acceptParkingTicket( $parkingTicket->id, $parkingVenueId );
+
+
+          return $this->sendSuccessResponse( 200, [
+              'id' => $parkingTicket->id,
+              'type' => 'parking_ticket',
+              'attributes' => [
+                'accepted' => 1
+              ]
+            ] );
+
+        } else {
+
+          $meta = (object)array();
+          $meta->price = $parkingTicketPrice->price;
+          $meta->total_payment = $userParkingTicket->total_payment;
+          $meta->currency_type = $parkingTicketPrice->currencyType;
+
+          $userParkingTicket->save();
+
+          return $this->sendErrorResponse( 402, 2, $meta );
+
+        }
+
+
+
     }
 
 }

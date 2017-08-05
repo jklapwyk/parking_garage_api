@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuids;
 
 class ParkingTicket extends Model
 {
 
     use Uuids;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.

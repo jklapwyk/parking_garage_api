@@ -211,17 +211,20 @@ class ParkingTicketControllerTest extends TestCase
     public function testAcceptTicket()
     {
 
-        $parkingTicketId = "5555";
+        $parkingTicketService = resolve('App\Services\ParkingTicketServiceInterface');
 
-        $response = $this->json('PATCH', '/api/acceptTicket/'.$parkingTicketId, ['data'=>['id'=>$parkingTicketId, 'type'=>'parking_ticket', 'parking_venue'=>'1']] );
+        $parkingTicketId = $parkingTicketService->createParkingTicket( 1, null );
+
+
+        $response = $this->json('PATCH', '/api/acceptTicket/'.$parkingTicketId, ['data'=>['parking_venue_id'=>'1']] );
 
         $response->assertStatus(200);
 
         $this->assertSuccessJSONResponse( $response );
 
-        $response->assertJson([
+        $response->assertJsonFragment([
                  'type' => 'parking_ticket',
-                 'accepted' => true
+                 'accepted' => 1
              ]);
 
     }
@@ -229,17 +232,20 @@ class ParkingTicketControllerTest extends TestCase
     public function testAcceptTicketFurtherPaymentRequired()
     {
 
-        $parkingTicketId = "5555";
+        $parkingTicketService = resolve('App\Services\ParkingTicketServiceInterface');
 
-        $response = $this->json('PATCH', '/api/acceptTicket/'.$parkingTicketId, ['data'=>['id'=>$parkingTicketId, 'type'=>'parking_ticket', 'parking_venue'=>'1']] );
+        $parkingTicketId = $parkingTicketService->createParkingTicket( 1, null, Carbon::now()->subHour(6) );
+
+
+        $response = $this->json('PATCH', '/api/acceptTicket/'.$parkingTicketId, ['data'=>['parking_venue_id'=>'1']] );
 
         $response->assertStatus(402);
 
         $this->assertErrorJSONResponse( $response, 402, 2 );
 
-        $response->assertFragmentJson([
-                'price' => 35.50,
-                'total_payment' => 0.00,
+        $response->assertJsonFragment([
+                'price' => 6.75,
+                'total_payment' => "0.00",
                 'currency_type' => 'CAD'
             ]);
 

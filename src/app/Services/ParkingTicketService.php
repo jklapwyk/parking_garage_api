@@ -60,7 +60,9 @@ class ParkingTicketService implements ParkingTicketServiceInterface
 
     public function acceptParkingTicket( $parkingVenueId, $parkingTicketId ){
 
+        
 
+        $parkingTicket->delete();
 
     }
 
