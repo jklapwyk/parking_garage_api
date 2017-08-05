@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App\Repositories\UserRepositoryInterface;
 use App\Models\User;
+use App\Models\ParkingVenueQueue;
+use App\Models\ParkingVenue;
 
 class UserController extends ApiController
 {
@@ -52,11 +54,5 @@ class UserController extends ApiController
     }
 
 
-    public function addUserToParkingVendorQueue(Request $request )
-    {
 
-        return response()->json([
-            'name' => 'test'
-            ]);
-    }
 }

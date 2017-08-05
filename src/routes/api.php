@@ -27,4 +27,4 @@ Route::patch('acceptTicket/{parkingTicketId}', 'ParkingTicketController@acceptTi
 
 Route::post('createUser', 'UserController@createUser');
 
-Route::post('addUserToParkingVendorQueue', 'UserController@addUserToParkingVendorQueue');
+Route::post('addUserToParkingVendorQueue', 'ParkingVenueController@addUserToParkingVendorQueue');

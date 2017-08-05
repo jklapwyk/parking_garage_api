@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App\Services\ParkingTicketServiceInterface;
+use App\Services\NotificationServiceInterface;
 use App\Models\User;
 use App\Models\ParkingVenue;
 use App\Models\ParkingTicket;
@@ -17,10 +18,12 @@ use Carbon\Carbon;
 class ParkingTicketController extends ApiController
 {
     protected $parkingTicketService;
+    protected $notificationService;
 
-    public function __construct( ParkingTicketServiceInterface $parkingTicketService )
+    public function __construct( ParkingTicketServiceInterface $parkingTicketService, NotificationServiceInterface $notificationService )
     {
         $this->parkingTicketService = $parkingTicketService;
+        $this->notificationService = $notificationService;
     }
 
     public function createParkingTicket( Request $request )
@@ -44,6 +47,10 @@ class ParkingTicketController extends ApiController
         }
 
         $parkingVenue = ParkingVenue::find($parkingVenueId);
+
+        if( !isset($parkingVenue) ){
+            return $this->sendErrorResponse( 404, 9 );
+        }
 
         $currentParkingTickets = $parkingVenue->userParkingTickets;
 
@@ -153,16 +160,24 @@ class ParkingTicketController extends ApiController
 
     public function acceptTicket( Request $request, $parkingTicketId )
     {
-        $parkingTicket = ParkingTicket::find( $parkingTicketId );
-
-        if( !isset($parkingTicket) ){
-            return $this->sendErrorResponse( 404, 3 );
-        }
 
         $jsonData = $request->json()->all();
         $data = $jsonData['data'];
         $parkingVenueId = $data['parking_venue_id'];
 
+        $parkingTicket = ParkingTicket::find( $parkingTicketId );
+
+
+
+
+        if( !isset($parkingTicket) ){
+            return $this->sendErrorResponse( 404, 3 );
+        }
+
+        $parkingVenue = ParkingVenue::find($parkingVenueId);
+        if( !isset($parkingVenue) ){
+            return $this->sendErrorResponse( 404, 9 );
+        }
 
         $parkingTicketPrice = $this->parkingTicketService->getPriceFromParkingTicket( $parkingTicket );
 
@@ -176,9 +191,8 @@ class ParkingTicketController extends ApiController
 
           $parkingTicket->delete();
           $userParkingTicket->delete();
-          //$parkingTicket->save();
 
-          //$this->parkingTicketService->acceptParkingTicket( $parkingTicket->id, $parkingVenueId );
+          $this->notificationService->notifyUserFreeLot( $parkingVenueId );
 
 
           return $this->sendSuccessResponse( 200, [

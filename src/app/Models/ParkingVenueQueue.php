@@ -20,6 +20,8 @@ class ParkingVenueQueue extends Model
         'parking_venue_id'
     ];
 
+    protected $table = 'parking_venue_queue';
+
     public function user()
     {
         return $this->belongsTo('App\Models\User');

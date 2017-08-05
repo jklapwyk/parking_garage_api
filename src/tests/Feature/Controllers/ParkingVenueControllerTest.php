@@ -10,67 +10,9 @@ use Response;
 use App\Models\User;
 use App\Models\ParkingTicket;
 
-class UserControllerTest extends TestCase
+class ParkingVenueControllerTest extends TestCase
 {
-
     use DatabaseMigrations;
-
-    public function testCreateUser()
-    {
-
-        $data = [
-                  'data'=>[
-                    'type'=>'user',
-                    'attributes'=>[
-                      'first_name'=>'jamie',
-                      'last_name'=>'klapwyk',
-                      'email'=>'jklapwyk@gmail.com',
-                      'password'=>'some_password'
-                    ]
-                  ]
-                ];
-
-        $response = $this->json('POST', '/api/createUser', $data );
-
-        $response->assertStatus(201);
-
-        $this->assertSuccessJSONResponse( $response );
-
-        $response->assertJsonFragment([
-                 'type' => 'user',
-                 'first_name' => 'jamie',
-                 'last_name' => 'klapwyk',
-                 'email' => 'jklapwyk@gmail.com'
-             ]);
-
-    }
-
-    public function testCreateUserWithDuplicateEmail()
-    {
-
-        $data = [
-                  'data'=>[
-                    'type'=>'user',
-                    'attributes'=>[
-                      'first_name'=>'jamie',
-                      'last_name'=>'klapwyk',
-                      'email'=>'jklapwyk@gmail.com',
-                      'password'=>'some_password'
-                    ]
-                  ]
-                ];
-
-        $this->json('POST', '/api/createUser', $data );
-
-        $response = $this->json('POST', '/api/createUser', $data );
-
-        $response->assertStatus(400);
-
-        $this->assertErrorJSONResponse( $response, 400, 4 );
-
-    }
-
-
 
     public function testAddUserToParkingVenueQueue()
     {
