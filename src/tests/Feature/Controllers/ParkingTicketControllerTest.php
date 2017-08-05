@@ -118,7 +118,7 @@ class ParkingTicketControllerTest extends TestCase
 
         $parkingTicketService = resolve('App\Services\ParkingTicketServiceInterface');
 
-        $parkingTicketId = $parkingTicketService->createParkingTicket( 1, $ticketCreationTime, $ticketCreationTime );
+        $parkingTicketId = $parkingTicketService->createParkingTicket( 1, null, $ticketCreationTime );
 
 
 
@@ -130,7 +130,7 @@ class ParkingTicketControllerTest extends TestCase
 
         $this->assertSuccessJSONResponse( $response );
 
-        $response->assertJson([
+        $response->assertJsonFragment([
                  'type' => 'parking_ticket',
                  'price' => $finalPrice
              ]);

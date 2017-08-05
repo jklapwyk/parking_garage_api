@@ -93,12 +93,6 @@ class ParkingTicketController extends ApiController
 
         $sortedPriceTiers = $priceTiers->sortByDesc('max_duration_seconds');
 
-        foreach( $sortedPriceTiers as $priceTier ){
-            \Log::info( "price  = ".$priceTier->price." max duration in seconds ".$priceTier->max_duration_seconds);
-        }
-
-
-
         $finalPrice = $this->calculatePrice( $sortedPriceTiers, $diffInSeconds );
 
         \Log::info( "Final price = ".$finalPrice);
@@ -107,6 +101,7 @@ class ParkingTicketController extends ApiController
         $currencyType = $sortedPriceTiers->get(0)->currencyType->iso_code;
 
         return $this->sendSuccessResponse( 200, [
+            'id' => $parkingTicket->id,
             'type' => 'parking_ticket',
             'attributes' => [
               'price' => $finalPrice,
@@ -119,22 +114,28 @@ class ParkingTicketController extends ApiController
 
       $accumulatedPrice = 0;
 
-      for( $i=0; $i < $priceTiers->count(); $i++ ){
+      for( $i=$priceTiers->count() - 1; $i >= 0; $i-- ){
 
           $priceTier = $priceTiers->get($i);
 
-          if( $seconds > $priceTier->max_duration_seconds ){
+          \Log::info( ">>> price  = ".$priceTier->price." max duration in seconds ".$priceTier->max_duration_seconds);
+
+
+          if( $seconds >= $priceTier->max_duration_seconds ){
+
+              \Log::info( "IN");
 
               $accumulatedPrice += $priceTier->price;
 
-              if( $i == 0 ){
-                  $accumulatedPrice += calculatePrice( $priceTiers, $seconds - $priceTier->max_duration_seconds, $accumulatedPrice );
+              if( $i == $priceTiers->count() - 1 ){
+                  \Log::info("RECURSIVE");
+                  $accumulatedPrice += $this->calculatePrice( $priceTiers, $seconds - $priceTier->max_duration_seconds );
               }
 
               break;
           }
 
-          \Log::info( ">>> price  = ".$priceTier->price." max duration in seconds ".$priceTier->max_duration_seconds);
+
       }
 
       return $accumulatedPrice;
