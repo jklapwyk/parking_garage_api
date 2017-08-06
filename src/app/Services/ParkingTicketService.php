@@ -29,7 +29,7 @@ class ParkingTicketService implements ParkingTicketServiceInterface
 
         try {
 
-          //DB::beginTransaction();
+          DB::beginTransaction();
 
 
           if( !isset( $userId ) ){
@@ -41,9 +41,8 @@ class ParkingTicketService implements ParkingTicketServiceInterface
 
           $userParkingTicket = $this->userParkingTicketRepository->createUserParkingTicket( $userId, $parkingTicket->id, $parkingVenueId );
 
-          \Log::info("PARK>>>> ".$parkingTicket->id);
 
-          //DB::commit();
+          DB::commit();
 
           return $parkingTicket->id;
 
@@ -60,7 +59,7 @@ class ParkingTicketService implements ParkingTicketServiceInterface
 
     public function acceptParkingTicket( $parkingVenueId, $parkingTicketId ){
 
-        
+
 
         $parkingTicket->delete();
 

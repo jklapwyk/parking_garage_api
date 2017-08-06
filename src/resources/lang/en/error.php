@@ -21,5 +21,4 @@ return [
   'error_code_9_title' => 'Parking Venue Not Found',
   'error_code_9_detail' => 'This parking venue does not exist.',
 
-
 ];

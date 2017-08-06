@@ -37,17 +37,10 @@ class NotificationService implements NotificationServiceInterface
                     $userName .= " ".$user->last_name;
                 }
 
-
-
                 \Mail::to($user->email, $userName)->send(new LotAvailable($userName));
-
-
 
             }
         }
-
-
-
 
     }
 

@@ -11,6 +11,7 @@ trait Uuids
     {
         parent::boot();
 
+        //this creates a UUID for the primary key for a Model
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = Uuid::generate()->string;
         });
