@@ -11,26 +11,20 @@ use App\Models\User;
 use App\Models\ParkingTicket;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ParkingVenue;
 use App\Services\ParkingTicketServiceInterface;
 
 class ParkingTicketControllerTest extends TestCase
 {
     use DatabaseMigrations;
 
-    /*
-    protected $parkingTicketService;
-
-    public function __construct( ParkingTicketServiceInterface $parkingTicketService )
-    {
-        $this->parkingTicketService = $parkingTicketService;
-    }
-    */
-
     public function testCreateTicket()
     {
 
+        //Create parking ticket
         $response = $this->json('POST', '/api/createParkingTicket', ['data'=>['parking_venue_id'=>'1']] );
 
+        //Check for successful response
         $this->assertParkingTicketSuccessResponse( $response );
 
 
@@ -38,10 +32,9 @@ class ParkingTicketControllerTest extends TestCase
 
     public function assertParkingTicketSuccessResponse( $response )
     {
+        //check for status of 201 and the json is correct
         $response->assertStatus(201);
-
         $this->assertSuccessJSONResponse( $response );
-
         $response->assertJsonFragment([
                  'type' => 'parking_ticket'
              ]);
@@ -66,14 +59,18 @@ class ParkingTicketControllerTest extends TestCase
 
         $parkingTicketService = resolve('App\Services\ParkingTicketServiceInterface');
 
-        for( $i = 0; $i < 5; $i++ ){
-          $parkingTicketService->createParkingTicket( 1 );
+        $parkingVenueId = 1;
+
+        $parkingVenue = ParkingVenue::find($parkingVenueId);
+
+        for( $i = 0; $i < $parkingVenue->total_lots; $i++ ){
+          $parkingTicketService->createParkingTicket( $parkingVenueId );
         }
 
 
         $user = factory(User::class)->make();
 
-        $response = $this->json('POST', '/api/createParkingTicket', ['data'=>['parking_venue_id'=>'1', 'user_id'=>$user->id]] );
+        $response = $this->json('POST', '/api/createParkingTicket', ['data'=>['parking_venue_id'=>$parkingVenueId, 'user_id'=>$user->id]] );
 
         $response->assertStatus(403);
 
@@ -255,7 +252,7 @@ class ParkingTicketControllerTest extends TestCase
     public function testAcceptTicketTicketDoesNotExist()
     {
 
-        $response = $this->json('PATCH', '/api/acceptTicket/555555' );
+        $response = $this->json('PATCH', '/api/acceptTicket/555555', ['data'=>['parking_venue_id'=>'1']] );
 
         $response->assertStatus(404);
 

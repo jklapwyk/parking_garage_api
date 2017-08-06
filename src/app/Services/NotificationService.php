@@ -6,6 +6,7 @@ namespace App\Services;
 use App\Models\ParkingVenueQueue;
 use App\Models\ParkingVenue;
 use App\Models\User;
+use App\Mail\LotAvailable;
 
 class NotificationService implements NotificationServiceInterface
 {
@@ -24,19 +25,24 @@ class NotificationService implements NotificationServiceInterface
 
             $user = User::find( $parkingVenueQueue->user_id );
 
-            if( isset($user) ){
+            if( isset($user) && isset( $user->email ) ){
 
-                \Log::info("Notify USER = ".$user->first_name );
+                $userName = $user->email;
 
-                \Mail::send('emails.notification', ['user' => $user], function ($m) use ($user) {
+                if( isset( $user->first_name ) ){
+                    $userName = $user->first_name;
+                }
 
-                    $m->from('no-reply@parkingapi.com', 'Parking Api - No Reply');
+                if( isset( $user->last_name ) ){
+                    $userName .= " ".$user->last_name;
+                }
 
-                    \Log::info("Email = ".$user->email);
 
-                    $m->to($user->email, $user->first_name." ".$user->last_name )->subject('Parking Lot Available');
 
-                });
+                \Mail::to($user->email, $userName)->send(new LotAvailable($userName));
+
+
+
             }
         }
 
