@@ -21,6 +21,7 @@ class CreateCurrencyTypesTable extends Migration
             $table->timestamps();
         });
 
+        //Add currency types
         $currency_types = [
             ['id' => 1, 'name' => 'Canadian Dollar', 'iso_code' => 'CAD', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['id' => 2, 'name' => 'US Dollar', 'iso_code' => 'USD', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
@@ -28,6 +29,7 @@ class CreateCurrencyTypesTable extends Migration
 
         DB::table('currency_types')->insert($currency_types);
 
+        //Add price tiers
         $price_tiers = [
             ['id' => 1, 'name' => 'Tier 1', 'price' => 3.00, 'currency_type_id' => 1, 'max_duration_seconds' => (1 * 60 * 60), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
             ['id' => 2, 'name' => 'Tier 2', 'price' => 4.50, 'currency_type_id' => 1, 'max_duration_seconds' => (3 * 60 * 60), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],

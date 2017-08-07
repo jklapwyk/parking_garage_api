@@ -7,6 +7,9 @@ use Webpatser\Uuid\Uuid;
 trait Uuids
 {
 
+    /**
+     * Overrides Model's boot function to create UUIDs for Model's primary key
+     */
     protected static function boot()
     {
         parent::boot();

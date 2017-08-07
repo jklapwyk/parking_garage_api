@@ -22,11 +22,19 @@ class PriceTier extends Model
         'max_duration_seconds',
     ];
 
+    /**
+     * Price Tier's Parking Venue
+     * @return ParkingVenue
+     */
     public function parkingVenues()
     {
         return $this->belongsToMany('App\Models\ParkingVenues', 'parking_venue_price_tiers', 'price_tier_id', 'parking_venue_id');
     }
 
+    /**
+     * Parking Venue Queue's Currency Type
+     * @return Currency Type
+     */
     public function currencyType()
     {
         return $this->belongsTo('App\Models\CurrencyType');

@@ -22,6 +22,7 @@ class CreateParkingVenuesTable extends Migration
             $table->timestamps();
         });
 
+        //Add starting parking venue id "1"
         $parking_venues = [
             ['id' => 1, 'name' => 'Parking Venue 1', 'total_lots' => 5, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
           ];

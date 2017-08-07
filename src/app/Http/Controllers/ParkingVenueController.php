@@ -20,6 +20,13 @@ class ParkingVenueController extends ApiController
     protected $parkingVenueRepository;
     protected $notificationService;
 
+    /**
+     * Request various repositories and services
+     *
+     * @param UserRepositoryInterface
+     * @param ParkingVenueRepositoryInterface
+     * @param NotificationServiceInterface
+     */
     public function __construct( UserRepositoryInterface $userRepository, ParkingVenueRepositoryInterface $parkingVenueRepository, NotificationServiceInterface $notificationService )
     {
         $this->userRepository = $userRepository;
@@ -27,6 +34,12 @@ class ParkingVenueController extends ApiController
         $this->notificationService = $notificationService;
     }
 
+    /**
+     * Add User to Parking Ticket
+     *
+     * @param Request
+     * @return Response
+     */
     public function addUserToParkingVendorQueue(Request $request )
     {
 

@@ -1,5 +1,10 @@
 <?php
 
+/**
+* Define Error Code and English titles and descriptions
+* @return Array of string
+*/
+
 return [
 
   'error_code_1_title' => 'Parking Venue Full',

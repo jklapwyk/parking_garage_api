@@ -16,8 +16,6 @@ class LotAvailable extends Mailable
 
     /**
      * Create a new message instance.
-     *
-     * @return void
      */
     public function __construct( $userName )
     {
@@ -25,8 +23,7 @@ class LotAvailable extends Mailable
     }
 
     /**
-     * Build the message.
-     *
+     * Build the message for Lot Available
      * @return $this
      */
     public function build()

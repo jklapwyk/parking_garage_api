@@ -6,6 +6,13 @@ use Illuminate\Routing\Controller as BaseController;
 
 class ApiController extends BaseController
 {
+    /**
+     * Generic Send Error JSON Message
+     *
+     * @param HTTP Status code
+     * @param Custom Error Code
+     * @return JSON response with Status code
+     */
     protected function sendErrorResponse( $statusCode, $errorCode, $meta = null ){
 
         $dataObject = (object)array();
@@ -27,6 +34,14 @@ class ApiController extends BaseController
 
     }
 
+    /**
+     * Generic Send Success JSON Message
+     *
+     * @param HTTP Status code
+     * @param Data object
+     * @param Meta object
+     * @return JSON response with Status code
+     */
     protected function sendSuccessResponse( $statusCode, $data, $meta = null ){
 
         $dataObject = (object)array();

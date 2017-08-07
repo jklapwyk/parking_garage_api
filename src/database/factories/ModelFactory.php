@@ -9,6 +9,7 @@ use App\Models\ParkingVenueQueue;
 use App\Models\PriceTier;
 use App\Models\UserParkingTicket;
 use Webpatser\Uuid\Uuid;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -20,7 +21,10 @@ use Webpatser\Uuid\Uuid;
 |
 */
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/**
+* Define User Model Factory
+* @return User
+*/
 $factory->define(User::class, function (Faker\Generator $faker) {
     static $password;
 
@@ -35,10 +39,19 @@ $factory->define(User::class, function (Faker\Generator $faker) {
     ];
 });
 
+/**
+* Define ParkingTicket Model Factory
+* @return ParkingTicket
+*/
 $factory->define(ParkingTicket::class, function (Faker\Generator $faker) {
     return [];
 });
 
+
+/**
+* Define ParkingVenue Model Factory
+* @return ParkingVenue
+*/
 $factory->define(ParkingVenue::class, function (Faker\Generator $faker) {
     return [
       'name' => $faker->name,

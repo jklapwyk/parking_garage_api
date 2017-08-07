@@ -7,6 +7,14 @@ use App\Models\UserParkingTicket;
 
 class UserParkingTicketRepository implements UserParkingTicketRepositoryInterface
 {
+
+    /**
+     * Create User Parking Ticket
+     * @param User Id
+     * @param Parking Ticket Id
+     * @param Parking Venue Id
+     * @return UserParkingTicket
+     */
     public function createUserParkingTicket( $userId, $parkingTicketId, $parkingVenueId ){
 
         $userParkingTicket = new UserParkingTicket;
@@ -16,7 +24,7 @@ class UserParkingTicketRepository implements UserParkingTicketRepositoryInterfac
         $userParkingTicket->parking_venue_id = $parkingVenueId;
 
         $userParkingTicket->save();
-        
+
 
         return $userParkingTicket;
 

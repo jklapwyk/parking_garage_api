@@ -36,11 +36,19 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    /**
+     * User's Parking Tickets meta information
+     * @return UserParkingTicket
+     */
     public function userParkingTickets()
     {
         return $this->hasMany('App\Models\UserParkingTicket');
     }
 
+    /**
+     * User's Parking Tickets
+     * @return ParkingTicket
+     */
     public function parkingTickets()
     {
       return $this->hasManyThrough(
@@ -48,6 +56,10 @@ class User extends Authenticatable
       );
     }
 
+    /**
+     * User's Parking Venue Queue
+     * @return ParkingVenueQueue
+     */
     public function parkingVenueQueue()
     {
         return $this->hasMany('App\Models\ParkingVenueQueue');

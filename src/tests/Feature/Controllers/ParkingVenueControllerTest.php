@@ -16,6 +16,9 @@ class ParkingVenueControllerTest extends TestCase
 {
     use DatabaseMigrations;
 
+    /**
+    * Test adding user to Parking venue queue
+    */
     public function testAddUserToParkingVenueQueue()
     {
         //Create User
@@ -45,6 +48,10 @@ class ParkingVenueControllerTest extends TestCase
 
     }
 
+
+    /**
+    * Test adding user to Parking venue queue when a parking venue queue object already exists for the user.
+    */
     public function testAddUserToParkingVenueQueueUserAlreadyAdded()
     {
         //Create User
@@ -72,6 +79,9 @@ class ParkingVenueControllerTest extends TestCase
 
     }
 
+    /**
+    * Test adding user to Parking venue queue asserting a notification by email because the Parking Venue Lot is not full.
+    */
     public function testAvailableLotNotificationImmediately()
     {
         //Check sending of mail
@@ -100,6 +110,10 @@ class ParkingVenueControllerTest extends TestCase
 
     }
 
+    /**
+    * Test adding user to Parking venue queue to a full Parking venue and asserting a notification by email after a Parking Ticket
+    * by the same Parking venue has just been accepted thus freeing up one spot.
+    */
     public function testAvailableLotNotificationAfterAcceptTicket()
     {
         //Check sending of mail

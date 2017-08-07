@@ -15,6 +15,9 @@ class UserControllerTest extends TestCase
 
     use DatabaseMigrations;
 
+    /**
+    * Test create user with information
+    */
     public function testCreateUser()
     {
 
@@ -45,6 +48,9 @@ class UserControllerTest extends TestCase
 
     }
 
+    /**
+    * Test create user with email that already exists.
+    */
     public function testCreateUserWithDuplicateEmail()
     {
 

@@ -22,6 +22,10 @@ class ParkingTicket extends Model
 
     public $incrementing = false;
 
+    /**
+     * Users with this Parking ticket
+     * @return collection of Users
+     */
     public function users()
     {
         return $this->hasManyThrough(
@@ -29,6 +33,10 @@ class ParkingTicket extends Model
         );
     }
 
+    /**
+     * Parking Ticket's meta information
+     * @return UserParkingTicket
+     */
     public function userParkingTicket()
     {
         return $this->hasOne('App\Models\UserParkingTicket');

@@ -20,16 +20,28 @@ class ParkingTicketController extends ApiController
     protected $parkingTicketService;
     protected $notificationService;
 
+    /**
+     * Request various services
+     *
+     * @param ParkingTicketServiceInterface
+     * @param NotificationServiceInterface
+     */
     public function __construct( ParkingTicketServiceInterface $parkingTicketService, NotificationServiceInterface $notificationService )
     {
         $this->parkingTicketService = $parkingTicketService;
         $this->notificationService = $notificationService;
     }
 
+
+    /**
+     * Create parking ticket
+     *
+     * @param Request
+     * @return Response
+     */
     public function createParkingTicket( Request $request )
     {
 
-        //\Log::info("parkingVenueId = ".$parkingVenueId."    userId = ".$userId);
         $jsonData = $request->json()->all();
 
         $data = $jsonData['data'];
@@ -58,11 +70,7 @@ class ParkingTicketController extends ApiController
             return $this->sendErrorResponse( 403, 1 );
         }
 
-        \Log::info("PARKING TICKETs COUNT =>  ".$currentParkingTickets->count());
-
         $parkingTicketId = $this->parkingTicketService->createParkingTicket( $parkingVenueId, $userId );
-
-        \Log::info("PARKING TICKET id =>  ".$parkingTicketId);
 
         return $this->sendSuccessResponse( 201, [
             'type' => 'parking_ticket',
@@ -72,10 +80,15 @@ class ParkingTicketController extends ApiController
 
     }
 
+    /**
+     * Request Price for Parking ticket
+     *
+     * @param Request
+     * @param Parking tTicket Id
+     * @return Response
+     */
     public function requestPriceForTicket( Request $request, $parkingTicketId )
     {
-        \Log::info("requestPriceForTicket = ".$parkingTicketId);
-
         $parkingTicket = ParkingTicket::find( $parkingTicketId );
 
         if( !isset($parkingTicket) ){
@@ -97,7 +110,13 @@ class ParkingTicketController extends ApiController
     }
 
 
-
+    /**
+     * Pay Parking ticket
+     *
+     * @param Request
+     * @param Parking Ticket Id
+     * @return Response
+     */
     public function payTicket( Request $request, $parkingTicketId )
     {
 
@@ -119,8 +138,6 @@ class ParkingTicketController extends ApiController
 
 
         $parkingTicketPrice = $this->parkingTicketService->getPriceFromParkingTicket( $parkingTicket );
-
-        \Log::info(" >> paymentAmount = ".$paymentAmount."  userParkingTicket ".$userParkingTicket);
 
         if( ( $userParkingTicket->total_payment + $paymentAmount ) >= $parkingTicketPrice->price ){
 
@@ -158,6 +175,14 @@ class ParkingTicketController extends ApiController
 
     }
 
+
+    /**
+     * Accept Parking ticket
+     *
+     * @param Request
+     * @param Parking Ticket Id
+     * @return Response
+     */
     public function acceptTicket( Request $request, $parkingTicketId )
     {
 
@@ -215,8 +240,6 @@ class ParkingTicketController extends ApiController
           return $this->sendErrorResponse( 402, 2, $meta );
 
         }
-
-
 
     }
 

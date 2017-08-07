@@ -18,6 +18,9 @@ class ParkingTicketControllerTest extends TestCase
 {
     use DatabaseMigrations;
 
+    /**
+    * Test create parking ticket
+    */
     public function testCreateTicket()
     {
 
@@ -30,6 +33,9 @@ class ParkingTicketControllerTest extends TestCase
 
     }
 
+    /**
+    * generic assert for parking ticket JSON structure and response code
+    */
     public function assertParkingTicketSuccessResponse( $response )
     {
         //check for status of 201 and the json is correct
@@ -41,6 +47,9 @@ class ParkingTicketControllerTest extends TestCase
 
     }
 
+    /**
+    * Test create parking ticket with registered user
+    */
     public function testCreateTicketWithUser()
     {
         $user = factory(User::class)->make();
@@ -54,6 +63,9 @@ class ParkingTicketControllerTest extends TestCase
              ]);
     }
 
+    /**
+    * Test create parking ticket when parking venue is full
+    */
     public function testCreateTicketWithUserParkingVenueFull()
     {
 
@@ -80,6 +92,9 @@ class ParkingTicketControllerTest extends TestCase
 
     }
 
+    /**
+    * Test create parking ticket when user does not exist
+    */
     public function testCreateTicketWithUserDoesNotExists()
     {
 
@@ -92,7 +107,9 @@ class ParkingTicketControllerTest extends TestCase
     }
 
 
-
+    /**
+    * Test get price for parking ticket for various parking ticket creation dates
+    */
     public function testRequestPriceForTicket()
     {
 
@@ -109,19 +126,17 @@ class ParkingTicketControllerTest extends TestCase
 
     }
 
+    /**
+    * An assertions function that creates a parking ticket with the creation date defined. and then an assertion
+    * that check that the predicted price matches the actual.
+    */
     public function assertRequestPriceForTicketAtTime( $ticketCreationTime, $finalPrice )
     {
-        //TODO Need to fill in this area
-
         $parkingTicketService = resolve('App\Services\ParkingTicketServiceInterface');
 
         $parkingTicketId = $parkingTicketService->createParkingTicket( 1, null, $ticketCreationTime );
 
-
-
         $url = '/api/requestPriceForTicket/'.(string)$parkingTicketId;
-
-        \Log::info("PARKING TICKET url = ".$url."  parking ticket id ".$parkingTicketId);
 
         $response = $this->json('GET', $url );
 
@@ -134,6 +149,9 @@ class ParkingTicketControllerTest extends TestCase
 
     }
 
+    /**
+    * Test get price for parking ticket that does not exist
+    */
     public function testRequestPriceForTicketDoesNotExist()
     {
 
@@ -145,7 +163,9 @@ class ParkingTicketControllerTest extends TestCase
 
     }
 
-
+    /**
+    * Test paying for the ticket
+    */
     public function testPayTicket()
     {
         $parkingTicketService = resolve('App\Services\ParkingTicketServiceInterface');
@@ -166,7 +186,9 @@ class ParkingTicketControllerTest extends TestCase
 
     }
 
-
+    /**
+    * Test paying for the ticket but with an amount lower than needed to pay the ticket in full.
+    */
     public function testPayTicketFurtherPaymentRequired()
     {
 
@@ -189,6 +211,9 @@ class ParkingTicketControllerTest extends TestCase
     }
 
 
+    /**
+    * Test paying for the ticket if the ticket does not exist.
+    */
     public function testPayTicketTicketDoesNotExist()
     {
 
@@ -204,7 +229,9 @@ class ParkingTicketControllerTest extends TestCase
 
 
 
-
+    /**
+    * Test accepting the ticket
+    */
     public function testAcceptTicket()
     {
 
@@ -226,6 +253,9 @@ class ParkingTicketControllerTest extends TestCase
 
     }
 
+    /**
+    * Test accepting the ticket that has not been paid in full.
+    */
     public function testAcceptTicketFurtherPaymentRequired()
     {
 
@@ -249,6 +279,9 @@ class ParkingTicketControllerTest extends TestCase
     }
 
 
+    /**
+    * Test accepting the ticket that does not exist.
+    */
     public function testAcceptTicketTicketDoesNotExist()
     {
 

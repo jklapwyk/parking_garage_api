@@ -5,6 +5,10 @@ namespace App\Services;
 interface NotificationServiceInterface
 {
 
+    /**
+     * Notify a user that a free lot is available via email
+     * @param ParkingVenueId
+     */
     public function notifyUserFreeLot( $parkingVenueId );
 
 }

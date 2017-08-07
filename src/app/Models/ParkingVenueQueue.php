@@ -20,13 +20,23 @@ class ParkingVenueQueue extends Model
         'parking_venue_id'
     ];
 
+    //custom table name with no "s"
     protected $table = 'parking_venue_queue';
 
+
+    /**
+     * Parking Venue Queue's User
+     * @return User
+     */
     public function user()
     {
         return $this->belongsTo('App\Models\User');
     }
 
+    /**
+     * Parking Venue Queue's ParkingVenue
+     * @return ParkingVenue
+     */
     public function parkingVenue()
     {
         return $this->belongsTo('App\Models\ParkingVenue');

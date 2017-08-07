@@ -17,11 +17,23 @@ class UserController extends ApiController
 
     protected $userRepository;
 
+
+    /**
+     * Request various repositories and services
+     *
+     * @param UserRepositoryInterface
+     */
     public function __construct( UserRepositoryInterface $userRepository )
     {
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * Create User
+     *
+     * @param Request
+     * @return Response
+     */
     public function createUser(Request $request )
     {
 

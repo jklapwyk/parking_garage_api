@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Pivot Table for ParkingVenue and PriceTier
+ */
 class ParkingVenuePriceTier extends Model
 {
 
@@ -20,11 +23,19 @@ class ParkingVenuePriceTier extends Model
         'price_tier_id'
     ];
 
+    /**
+     * ParkingVenue
+     * @return ParkingVenue
+     */
     public function parkingVenue()
     {
         return $this->belongsTo('App\Models\ParkingVenue');
     }
 
+    /**
+     * PriceTier
+     * @return PriceTier
+     */
     public function priceTier()
     {
         return $this->belongsTo('App\Models\PriceTier');
