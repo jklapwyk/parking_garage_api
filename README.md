@@ -85,6 +85,8 @@ MAIL_PASSWORD=[mailtrap credentials]
 MAIL_ENCRYPTION=null
 ```
 
+Note: You'll need to use your own Mailtrap credentials here by registering at this site https://mailtrap.io
+
 12 . Copy the `.env` file to `.env.testing`
 ```
 cp .env .env.testing
