@@ -1,0 +1,166 @@
+{
+	"variables": [],
+	"info": {
+		"name": "ParkingApi",
+		"_postman_id": "3682a1af-2ba2-4234-7b92-9e9648ce0f3b",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Ticket",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"parking_ticket_id\", jsonData.data.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:8280/api/createParkingTicket",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"data\":{\n\t\t\"parking_venue_id\":\"1\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Ticket With User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"parking_ticket_id\", jsonData.data.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:8280/api/createParkingTicket",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"data\":{\n\t\t\"parking_venue_id\":\"1\",\n\t\t\"user_id\":\"8\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Request Price For Ticket",
+			"request": {
+				"url": "localhost:8280/api/requestPriceForTicket/{{parking_ticket_id}}",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Pay Ticket",
+			"request": {
+				"url": "localhost:8280/api/payTicket/{{parking_ticket_id}}",
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"data\":{\n\t\t\"payment_amount\":13.00,\t\n\t\t\"currency_type\":\"CAD\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Accept Ticket",
+			"request": {
+				"url": "localhost:8280/api/acceptTicket/{{parking_ticket_id}}",
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"data\":{\n\t\t\"parking_venue_id\":1\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"url": "localhost:8280/api/createUser",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"data\":{\n    \"type\":\"user\",\n    \"attributes\":{\n      \"first_name\":\"jamie\",\n      \"last_name\":\"klapwyk\",\n      \"email\":\"jklapwyk@gmail.com\",\n      \"password\":\"some_password\"\n    }\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add User To Parking Venue Queue",
+			"request": {
+				"url": "localhost:8280/api/addUserToParkingVendorQueue",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"data\":{\n\t\t\"type\":\"parking_vendor_queue\",\n\t\t\"attributes\":{\n\t\t\t\"user_id\":\"8\",\n\t\t\t\"parking_venue_id\":\"1\"\n\t\t}\n\t}\n}\n"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
